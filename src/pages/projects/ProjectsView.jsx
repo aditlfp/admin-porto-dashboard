@@ -114,8 +114,8 @@ export default function ProjectsView({
 
        {/* Create/Edit Modal */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl transform transition-all my-8">
+        <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4 overflow-y-auto">
+          <div className="bg-white rounded-2xl border-2 border-gray-200 shadow-2xl w-full max-w-2xl transform transition-all my-8">
             <div className="flex items-center justify-between p-6 border-b border-slate-200">
               <h2 className="text-xl font-bold text-slate-800">
                 {modalMode === "create" ? "Create Project" : "Edit Project"}

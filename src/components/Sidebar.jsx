@@ -1,5 +1,5 @@
-import { Link, useLocation } from "react-router-dom";
-import { LayoutDashboard, Award, Briefcase, Menu, X } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { LayoutDashboard, Award, Briefcase, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import {
   getUser,
@@ -11,23 +11,28 @@ export default function Sidebar() {
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});
+  const navigate = useNavigate();
 
   const loadData = async () => {
     try {
       const res = await getUser();
       setUser(res.data);
     } catch (err) {
-      console.error("Error loading certificates", err);
+      console.error("Error loading user", err);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleLogout = async () => {
+    const res = await logout(user);
+    navigate("/login");
   };
 
   useEffect(() => {
     loadData();
   }, []);
 
-  console.log(user.name)
   const navItems = [
     { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/certificates", icon: Award, label: "Certificates" },
@@ -42,16 +47,16 @@ export default function Sidebar() {
       {/* Mobile Menu Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-slate-800 text-white rounded-lg shadow-lg hover:bg-slate-700 transition-colors"
+        className={`lg:hidden fixed ${isOpen ? 'top-7 left-58 translate-x-0 rounded-lg  p-2' : 'top-7 left-0 rounded-r-lg  p-2 px-3'} z-50 bg-slate-800 text-white shadow-lg hover:bg-slate-700 transition-all ease-in-out duration-350`}
       >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
+        {isOpen ? <PanelLeftClose size={24} /> : <PanelLeftOpen size={24} />}
       </button>
 
       {/* Overlay for mobile */}
       {isOpen && (
         <div
           onClick={() => setIsOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-40"
+          className="lg:hidden fixed inset-0 backdrop-blur-md z-40 overflow-hidden"
         />
       )}
 
@@ -145,7 +150,7 @@ export default function Sidebar() {
                 <p className="text-xs text-slate-400">{user.email}</p>
               </div>
             </div>
-            <button onClick={() => logout()} className="w-full px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-sm font-medium transition-colors border border-red-500/20">
+            <button onClick={() => handleLogout()} className="w-full px-3 py-2 bg-red-500/10 hover:bg-red-500/20 text-red-400 rounded-lg text-sm font-medium transition-colors border border-red-500/20">
               Logout
             </button>
           </div>
@@ -153,7 +158,7 @@ export default function Sidebar() {
       </div>
 
       {/* Spacer for main content */}
-      <div className="hidden lg:block mr-9" />
+      <div className={`hidden lg:block sm:mr-9`} />
     </>
   );
 }

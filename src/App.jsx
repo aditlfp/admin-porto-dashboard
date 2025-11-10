@@ -24,7 +24,7 @@ const ProtectedLayout = () => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="ml-64 w-full bg-gray-50 min-h-screen p-4">
+      <div className="md:ml-64 w-full bg-gray-50 min-h-screen p-4">
         <Outlet />
       </div>
     </div>

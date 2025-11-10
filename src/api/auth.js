@@ -16,8 +16,11 @@ export const login = async (credentials) => {
   return { user, token };
 };
 
-
-export const logout = () => {
-  localStorage.removeItem("token");
-  window.location.href = "/login";
-};
+export const logout = async (user) => {
+  try {
+    await axiosClient.post("/api/logout", user); // no need to send token — interceptor adds it
+  } catch (e) {
+    console.warn("Logout API failed", e);
+  } finally {
+    localStorage.removeItem("token");
+  }};

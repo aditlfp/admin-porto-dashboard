@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { login as loginRequest } from "../api/auth";
 import { useAuth } from "../context/AuthContext";
+import {
+  Navigate,
+} from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -15,7 +18,7 @@ export default function Login() {
     try {
       const { user, token } = await loginRequest({ email, password });
       login(user, token);
-      window.location.href = "/dashboard";
+      if (token) return <Navigate to="/dashboard" />;
     } catch (err) {
       console.error(err);
       setError("Invalid credentials");

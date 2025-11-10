@@ -151,6 +151,8 @@ const removeTech = (index) => {
       removeFeature={removeFeature}
       addTech={addTech}
       removeTech={removeTech}
+      setNewFeature={setNewFeature}
+      setNewTech={setNewTech}
     />
   );
 }

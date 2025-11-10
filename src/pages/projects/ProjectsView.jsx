@@ -32,7 +32,9 @@ export default function ProjectsView({
   addTech,
   removeTech,
   newFeature,
-  newTech
+  newTech,
+  setNewFeature,
+  setNewTech
 }) {
   if (loading)
     return (

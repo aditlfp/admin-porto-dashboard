@@ -345,7 +345,7 @@ export default function ProjectsView({
                 Cancel
               </button>
               <button
-                onClick={handleSubmit}
+                onClick={() => handleSubmit()}
                 className="flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors font-medium"
               >
                 {modalMode === "create" ? "Create Project" : "Save Changes"}
@@ -357,7 +357,7 @@ export default function ProjectsView({
 
       {/* Delete Confirmation Modal */}
       {deleteConfirm.open && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all">
             <div className="p-6">
               <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">

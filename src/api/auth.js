@@ -15,12 +15,3 @@ export const login = async (credentials) => {
   localStorage.setItem("token", token);
   return { user, token };
 };
-
-export const logout = async (user) => {
-  try {
-    await axiosClient.post("/api/logout", user); // no need to send token — interceptor adds it
-  } catch (e) {
-    console.warn("Logout API failed", e);
-  } finally {
-    localStorage.removeItem("token");
-  }};

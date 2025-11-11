@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axiosClient from "../api/axiosClient";
 
+
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
@@ -10,7 +11,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
-      setUser({ token }); // bisa juga kasih dummy user misal { name: "Admin" }
+      setUser({ token });
     }
     setLoading(false);
   }, []);

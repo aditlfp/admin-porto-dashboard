@@ -6,6 +6,8 @@ import {
   updateCertificate,
 } from "../../api/certificates";
 import CertificatesView from "./CertificatesView";
+import { notifySuccess, notifyError, notifyWarning } from '../../components/Notifications'
+
 
 export default function CertificatesContainer() {
   const [certificates, setCertificates] = useState([]);
@@ -83,14 +85,17 @@ export default function CertificatesContainer() {
     try {
       if (modalMode === "create") {
         await createCertificate(formData);
+        notifySuccess("Certificates Success To Add!")
       } else {
         await updateCertificate(currentCert.id, formData);
+        notifySuccess("Certificates Success To Updated!")
       }
       closeModal();
       loadData();
     } catch (error) {
       if (error.response?.data?.errors) {
         setErrors(error.response.data.errors);
+        notifyError("Error Cant Continue Proccess")
       }
     }
   };
@@ -106,6 +111,7 @@ export default function CertificatesContainer() {
   const handleDelete = async () => {
     await deleteCertificate(deleteConfirm.id);
     closeDeleteConfirm();
+    notifyWarning("Certificates has been Remove!")
     loadData();
   };
 

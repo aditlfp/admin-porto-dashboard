@@ -1,37 +1,25 @@
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LayoutDashboard, Award, Briefcase, PanelLeftClose, PanelLeftOpen } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import {
   getUser,
 } from "../api/user";
-import { logout } from "../api/auth";
+import { useAuth } from "../context/AuthContext";
+import { notifyInfo } from './Notifications'
 
 export default function Sidebar() {
   const location = useLocation();
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState({});
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
-  const loadData = async () => {
-    try {
-      const res = await getUser();
-      setUser(res.data);
-    } catch (err) {
-      console.error("Error loading user", err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleLogout = async () => {
-    const res = await logout(user);
+    logout();
+    notifyInfo("Now You Has Been Log Out!")
     navigate("/login");
   };
-
-  useEffect(() => {
-    loadData();
-  }, []);
 
   const navItems = [
     { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },

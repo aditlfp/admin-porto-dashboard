@@ -13,7 +13,6 @@ import Projects from "./pages/Projects";
 import { useAuth } from "./context/AuthContext";
 import "./App.css";
 
-// 🔒 Route khusus halaman yang butuh login
 const ProtectedLayout = () => {
   const { user, loading } = useAuth();
 
@@ -31,7 +30,6 @@ const ProtectedLayout = () => {
   );
 };
 
-// 🧩 Route khusus halaman login (tanpa sidebar)
 const GuestLayout = () => {
   const { user } = useAuth();
   if (user) return <Navigate to="/dashboard" />;

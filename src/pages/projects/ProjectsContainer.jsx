@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getProjects, createProject, updateProject, deleteProject } from "../../api/projects";
 import ProjectsView from "./ProjectsView";
+import { notifySuccess, notifyError, notifyWarning } from '../../components/Notifications'
 
 export default function ProjectsContainer() {
   const [projects, setProjects] = useState([]);
@@ -42,13 +43,15 @@ export default function ProjectsContainer() {
   }, []);
 
   // CRUD helpers
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async () => {
     try {
-      if (modalMode === "create") await createProject(formData);
-      else await updateProject(currentProject.id, formData);
+      if (modalMode === "create") await createProject(currentProject);
+      else await updateProject(currentProject.id, currentProject);
+      notifySuccess(modalMode === "create" ? "Project Success To Add!" : "Project Success To Updated!")
       closeModal();
       loadData();
     } catch (error) {
+      notifyError('An Error To' + modalMode === "create" ? "Created Project" : "Updated Project")
       if (error.response?.data?.errors) setErrors(error.response.data.errors);
     }
   };
@@ -98,6 +101,7 @@ const removeTech = (index) => {
   const handleDelete = async () => {
     await deleteProject(deleteConfirm.id);
     closeDeleteConfirm();
+    notifyWarning("Project Has Been Remove!")
     loadData();
   };
 

@@ -12,6 +12,9 @@ export default function ProjectsContainer() {
   const [errors, setErrors] = useState({});
   const [newFeature, setNewFeature] = useState("");
   const [newTech, setNewTech] = useState("");
+  const [page, setPage] = useState(1);
+  const [lastPage, setLastPage] = useState(1);
+  const [waiting, setWaiting] = useState(false);
   const [deleteConfirm, setDeleteConfirm] = useState({ open: false, id: null, title: "", img: "" });
 
   function defaultProject() {
@@ -29,13 +32,21 @@ export default function ProjectsContainer() {
   }
 
   // Load data
-  const loadData = async () => {
+  const loadData = async (pageNum = 1) => {
+    setLoading(true);
     try {
-      const res = await getProjects();
-      setProjects(res.data?.data || []);
+      const res = await getProjects(pageNum);
+      console.log(res)
+      setProjects(res.data.data);
+      setPage(res.data.data.current_page);
+      setLastPage(res.data.data.last_page);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePageChange = (newPage) => {
+    loadData(newPage); // Fetch new data page
   };
 
   useEffect(() => {
@@ -44,14 +55,21 @@ export default function ProjectsContainer() {
 
   // CRUD helpers
   const handleSubmit = async () => {
+    setWaiting(true)
     try {
-      if (modalMode === "create") await createProject(currentProject);
-      else await updateProject(currentProject.id, currentProject);
+      if (modalMode === "create") {
+        await createProject(currentProject)
+      }else{ 
+        await updateProject(currentProject.id, currentProject)
+      }
       notifySuccess(modalMode === "create" ? "Project Success To Add!" : "Project Success To Updated!")
+      setWaiting(false)
       closeModal();
       loadData();
     } catch (error) {
-      notifyError('An Error To' + modalMode === "create" ? "Created Project" : "Updated Project")
+      setWaiting(false)
+      console.log(error)
+      notifyError(modalMode === "create" ? "Cant Continue Action Create Project!" : "Cant Continue Action Update!")
       if (error.response?.data?.errors) setErrors(error.response.data.errors);
     }
   };
@@ -65,6 +83,19 @@ export default function ProjectsContainer() {
       imgPreview: URL.createObjectURL(file),
     });
   };
+
+
+  useEffect(() => {
+    if (modalMode !== "create" && currentProject.img && typeof currentProject.img === "string") {
+      const url = `${import.meta.env.VITE_API_BASE_URL}/storage/public/images/${currentProject.img}`;
+
+      setCurrentProject(prev => ({
+        ...prev,
+        imgPreview: url
+      }));
+    }
+  }, [modalMode, currentProject.img]);
+
 
   const addFeature = () => {
   if (!newFeature.trim()) return;
@@ -157,6 +188,10 @@ const removeTech = (index) => {
       removeTech={removeTech}
       setNewFeature={setNewFeature}
       setNewTech={setNewTech}
+      page={page}
+      lastPage={lastPage}
+      handlePageChange={handlePageChange}
+      waiting={waiting}
     />
   );
 }

@@ -1,6 +1,5 @@
 import axiosClient from "./axiosClient";
-
-export const getProjects = () => axiosClient.get("/api/v1/admin-projects");
+export const getProjects = (page = 1) => axiosClient.get(`/api/v1/admin-projects?page=${page}`);
 export const createProject = (data) => axiosClient.post("/api/v1/admin-projects", data,{
     headers: { "Content-Type": "multipart/form-data" },
   });
